@@ -1,0 +1,206 @@
+SELECT
+
+-- 1. Selecciona todos los usuarios cuyo nombre contiene la letra ‘a’.
+SELECT * FROM users WHERE names LIKE "%a%";
+-- 2. Selecciona todos los usuarios cuyo apellido empieza con ‘S’.
+SELECT * FROM users WHERE last_names LIKE "S%";
+-- 3. Selecciona todos los usuarios cuyo correo electrónico personal termina en
+-- ‘gmail.com’.
+SELECT * FROM users WHERE email LIKE "%gmail.com";
+-- 4. Selecciona los nombres y correos electrónicos de todos los usuarios ordenados
+-- alfabéticamente por nombre.
+SELECT names as nombres, email FROM users 
+ORDER BY nombres ASC;
+-- 5. Selecciona los usuarios ordenados por su edad de forma descendente.
+SELECT names, age as edad FROM users 
+ORDER BY edad DESC;
+-- 6. Selecciona los primeros 10 usuarios ordenados por su fecha de creación.
+SELECT created_at as fecha_creacion, names FROM users
+ORDER BY fecha_creacion ASC
+LIMIT 10;
+-- 7. Selecciona los últimos 5 usuarios ordenados por su fecha de actualización.
+SELECT updated_at as fecha_actualizacion, names FROM users
+ORDER BY fecha_actualizacion DESC
+LIMIT 5;
+-- 8. Selecciona los usuarios que tienen entre 2 y 4 hijos.
+SELECT * FROM users WHERE children >= 2 AND children <=4;
+-- 9. Selecciona los usuarios cuyo país no es ‘USA’.
+SELECT * FROM users WHERE country NOT LIKE '%USA%';
+-- 10. Selecciona los usuarios cuyo patrimonio es mayor que 100000.
+SELECT * FROM users WHERE patrimonio > 100000;
+-- 11. Selecciona los usuarios con el género ‘female’ y estado ‘active’.
+SELECT * FROM users WHERE (gender = 'female') AND (status = 'active');
+-- 12. Selecciona los usuarios con correos electrónicos personales que contienen ‘work’.
+SELECT * FROM users WHERE personal_email LIKE '%work%';
+-- 13. Selecciona los usuarios cuya ciudad empieza con ‘M’.
+SELECT * FROM users WHERE country LIKE 'M%';
+-- 14. Selecciona el usuario más joven.
+SELECT age as edad, names FROM users 
+ORDER BY edad ASC
+LIMIT 1;
+-- 15. Selecciona el usuario más viejo.
+SELECT age as edad, names FROM users 
+ORDER BY edad DESC
+LIMIT 1;
+-- 16. Selecciona el usuario con el patrimonio más alto.
+SELECT patrimonio, names FROM users 
+ORDER BY patrimonio DESC
+LIMIT 1;
+-- 17. Selecciona el usuario con el patrimonio más bajo.
+SELECT patrimonio, names FROM users 
+ORDER BY patrimonio ASC
+LIMIT 1;
+-- 18. Selecciona el usuario con más hijos.
+SELECT children as hijos, names FROM users 
+ORDER BY hijos DESC
+LIMIT 1;
+-- 19. Selecciona el usuario con menos hijos.
+SELECT children as hijos, names FROM users 
+ORDER BY hijos ASC
+LIMIT 1;
+-- 20. Selecciona el número total de usuarios.
+SELECT id,names FROM users ORDER BY id DESC LIMIT 1;
+-- 21. Selecciona el número total de usuarios activos.
+SELECT SUM(status) FROM users WHERE status = 'active';
+-- 22. Selecciona el número total de usuarios inactivos.
+SELECT SUM(status) FROM users WHERE status = 'inactive';
+-- 23. Selecciona el promedio de edad de todos los usuarios.
+SELECT AVG(age), age FROM users;
+-- 24. Selecciona el promedio de patrimonio de todos los usuarios.
+SELECT AVG(patrimonio), patrimonio FROM users;
+-- 25. Selecciona el total de activos de todos los usuarios.
+SELECT SUM(activos), activos FROM users;
+-- 26. Selecciona el total de pasivos de todos los usuarios.
+SELECT SUM(pasivos), pasivos FROM users;
+-- 27. Selecciona los usuarios agrupados por país y cuenta cuántos usuarios hay en cada
+-- país.
+SELECT country, COUNT(country) FROM users
+GROUP BY country;
+-- 28. Selecciona los usuarios agrupados por ciudad y cuenta cuántos usuarios hay en cada
+-- ciudad.
+SELECT city, COUNT(city) FROM users
+GROUP BY city;
+-- 29. Selecciona el número total de usuarios cuya música favorita es ‘Rock’.
+SELECT COUNT(music) FROM users
+WHERE music = 'Rock'
+GROUP BY music;
+-- 30. Selecciona el número total de usuarios cuyo género es ‘male’ y están activos.
+SELECT COUNT(*) AS male_activos FROM users WHERE gender = 'male' AND status = 'active';
+-- 31. Selecciona los usuarios ordenados por su número de hijos en forma ascendente.
+SELECT * FROM users 
+ORDER BY children ASC; 
+-- 32. Selecciona los usuarios ordenados por su patrimonio en forma descendente.
+SELECT * FROM users 
+ORDER BY patrimonio DESC;
+-- 33. Selecciona los usuarios cuyo nombre o apellido contiene la letra ‘e’.
+SELECT * FROM users WHERE names LIKE '%e%' OR last_names LIKE '%e%';
+-- 34. Selecciona el usuario cuyo nombre es ‘Alice’ y su género es ‘female’.
+SELECT * FROM users WHERE names = 'Alice' AND gender = 'female';
+-- 35. Selecciona los usuarios que tienen más de 2 hijos y menos de 5.
+SELECT * FROM users WHERE children > 2 AND children < 5;
+-- 36. Selecciona los usuarios cuyo correo electrónico personal no contiene ‘gmail.com’.
+SELECT * FROM users WHERE email NOT LIKE '%gmail.com';
+-- 37. Selecciona los usuarios cuyo número de teléfono empieza con ‘555’.
+SELECT * FROM users WHERE phone LIKE '555%';
+-- 38. Selecciona los usuarios que fueron creados en el último mes.
+SELECT * FROM users WHERE created_at >= DATE_SUB(CURDATE(), INTERVAL 1 MONTH);
+-- 39. Selecciona los usuarios cuya edad es múltiplo de 5.
+SELECT * FROM users WHERE age % 5 = 0;
+-- 40. Selecciona los usuarios agrupados por estado y calcula el promedio de patrimonio en
+-- cada grupo.
+SELECT status, AVG(patrimonio) AS promedio_patrimonio 
+FROM users 
+GROUP BY status;
+
+
+-- Actualización
+-- 
+-- 1. Incrementa la edad de todos los usuarios cuyo país es ‘Canada’ y tienen más de 2
+-- hijos en 2 años.
+UPDATE users SET age = age + 2 WHERE country = 'Canada' AND children > 2;
+-- 2. Cambia el estado a ‘inactive’ para todos los usuarios cuyo correo personal no
+-- contiene ‘work’ y son mayores de 50 años.
+UPDATE users SET status = 'inactive' WHERE personal_email NOT LIKE '%work%' AND age > 50;
+-- 3. Duplica los activos para todos los usuarios cuyo patrimonio es menor que 50000.
+UPDATE users SET activos = activos * 2 WHERE patrimonio < 50000;
+-- 4. Cambia la ciudad a ‘Unknown’ para todos los usuarios que no tienen hijos y están
+-- inactivos.
+UPDATE users SET city = 'Unknown' WHERE children = 0 AND status = 'inactive';
+-- 5. Actualiza el género a ‘female’ para todos los usuarios cuyo nombre contiene la letra
+-- ‘a’ y tienen más de 3 hijos.
+UPDATE users SET gender = 'female' WHERE names LIKE '%a%' AND children > 3;
+-- 6. Incrementa los pasivos en un 20% para todos los usuarios que tienen activos
+-- mayores que 100000.
+UPDATE users SET pasivos = pasivos * 1.20 WHERE activos > 100000;
+-- 7. Cambia el correo personal a ‘unknown@example.com’ para todos los usuarios cuyo
+-- dominio de correo es ‘hotmail.com’.
+UPDATE users SET personal_email = 'unknown@example.com' WHERE personal_email LIKE '%hotmail.com';
+-- 8. Reduce en 5 años la edad de todos los usuarios cuyo estado es ‘active’ y viven en
+-- ‘New York’.
+UPDATE users SET age = age - 5 WHERE status = 'active' AND country = 'New York';
+-- 9. Actualiza el patrimonio a 100000 para todos los usuarios cuyo número de hijos es
+-- par.
+UPDATE users SET patrimonio = 100000 WHERE MOD(children, 2) = 0;
+-- 10. Cambia la música favorita a ‘Jazz’ para todos los usuarios que tienen más de 2 hijos
+-- y están activos.
+UPDATE users SET music = 'Jazz' WHERE children > 2 AND status = 'actives';
+-- 11. Incrementa el número de hijos en 1 para todos los usuarios cuyo género es ‘male’ y
+-- tienen pasivos menores que 50000.
+UPDATE users SET children = children + 1 WHERE gender = 'male' AND pasivos < 50000;
+-- 12. Cambia el estado a ‘active’ para todos los usuarios que tienen un correo electrónico
+-- que contiene ‘example’.
+UPDATE users SET status = 'active' WHERE email LIKE '%example%';
+-- 13. Actualiza la ciudad a ‘New City’ para todos los usuarios cuyo patrimonio es mayor
+-- que 200000 y tienen menos de 3 hijos.
+UPDATE users SET city = 'New City' WHERE patrimonio > 200000 AND children > 3;
+-- 14. Duplica el patrimonio para todos los usuarios cuyo género es ‘female’ y están
+-- inactivos.
+UPDATE users SET patrimonio = patrimonio * 2 WHERE gender = 'female' AND status = 'inactive';
+-- 15. Cambia el país a ‘Unknown’ para todos los usuarios cuya edad es mayor que 70.
+UPDATE users SET country = 'Unknown' WHERE age > 70;
+-- 16. Incrementa los activos en 50000 para todos los usuarios cuyo nombre empieza con
+-- ‘J’ y tienen más de 1 hijo.
+UPDATE users SET activos = activos + 50000 WHERE names LIKE 'J%' AND children > 1;
+-- 17. Cambia el teléfono a ‘000-000-0000’ para todos los usuarios cuyo correo electrónico
+-- contiene ‘test’.
+UPDATE users SET phone = '00-000-0000' WHERE email LIKE '%test%';
+-- 18. Reduce los activos a la mitad para todos los usuarios cuyo estado es ‘inactive’ y
+-- tienen más de 4 hijos.
+UPDATE users SET activos = activos/2 WHERE status = 'inactive' AND children > 4;
+-- 19. Cambia la música favorita a ‘Classical’ para todos los usuarios cuya edad es mayor
+-- que 60 y viven en ‘USA’.
+UPDATE users SET music = 'Classical' WHERE age > 60 AND country = 'USA';
+-- 20. Incrementa el número de hijos en 2 para todos los usuarios cuyo estado es ‘active’ y
+-- tienen activos menores que 50000.
+UPDATE users SET children = children + 2 WHERE status = 'active' AND activos < 50000;
+
+
+-- Eliminar
+-- 
+-- 1. Elimina todos los usuarios que tienen más de 3 hijos y cuyo patrimonio es menor
+-- que 100000.
+DELETE FROM users WHERE children > 3 AND patrimonio < 100000;
+-- 2. Elimina todos los usuarios cuyo correo personal contiene ‘spam’ y tienen más de 50
+-- años.
+DELETE FROM users WHERE personal_email LIKE '%spam%';
+-- 3. Elimina todos los usuarios que no tienen activos pero tienen pasivos mayores que 0.
+DELETE FROM users WHERE activos = 0 AND pasivos > 0;
+-- 4. Elimina todos los usuarios que están inactivos y cuyo nombre o apellido contiene la
+-- letra ‘z’.
+DELETE FROM users WHERE status = 'inactive' AND (names LIKE '%z%' OR last_names LIKE '%z%' ) ;
+-- 5. Elimina todos los usuarios cuyo número de teléfono contiene la secuencia ‘123’ y
+-- tienen más de 2 hijos.
+DELETE FROM users WHERE phone LIKE '%123%' AND children > 2 ;
+-- 6. Elimina todos los usuarios que viven en ‘Unknown’ y cuyo estado es ‘inactive’.
+DELETE FROM users WHERE country = 'Unknown' AND status = 'inactive';
+-- 7. Elimina todos los usuarios que fueron creados antes del año 2000 y cuyo país es
+-- ‘USA’.
+DELETE FROM users WHERE created_at LIKE '%2000%' AND country = 'United States of America';
+-- 8. Elimina todos los usuarios cuyo patrimonio es negativo y tienen el estado ‘active’.
+DELETE FROM users WHERE patrimonio < 0 AND status = 'active';
+-- 9. Elimina todos los usuarios cuyo correo electrónico termina en ‘example.com’ y
+-- tienen activos mayores que 50000.
+DELETE FROM users WHERE email LIKE '%example.com' AND activos > 50000;
+-- 10. Elimina todos los usuarios que tienen más de 5 hijos y cuyo correo personal no
+-- contiene ‘family’.
+DELETE FROM users WHERE children > 5 AND personal_email NOT LIKE '%family%';
